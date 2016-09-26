@@ -97,7 +97,7 @@ else:
 logfile = open("pylog."+str(random_number)+".txt","w")
 
 # cmd = """bash runcatrapid.fragments.sh "{}" "{}" "{}" "{}" "{}" "{}" "{}" """.format(random_number, args.FORMemail, title, args.FORMprotFrag[0], "150", os.path.join(WORKER_PATH,args.fileA[0].replace(' ', '-')), os.path.join(WORKER_PATH,args.fileB[0].replace(' ', '-')) )
-cmd = """bash algorithm-eclip_score.sh "{}" "{}" "{}" "{}" "{}" "{}" "{}" "{}" """.format(random_number, args.FORMemail[0], title, args.FORMprotFrag[0], "150", protFile, rnaFile, args.FORMextras[0])
+cmd = """bash eclip_score.sh "{}" "{}" "{}" "{}" "{}" "{}" "{}" "{}" """.format(random_number, args.FORMemail[0], title, args.FORMprotFrag[0], "150", protFile, rnaFile, args.FORMextras[0])
 
 p = subprocess.Popen(cmd, cwd=SCRIPT_PATH, shell=True)
 
