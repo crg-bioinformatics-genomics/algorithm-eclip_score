@@ -36,12 +36,13 @@ date +"%m-%d-%y %r"
 cd ./rna
 
 	echo "# SERVER RUNNING...PLEASE REMEMBER TO REFRESH THIS PAGE FROM TIME TO TIME..." >  ../outputs/library.$1.$3.txt;
-
 	nt=`cat outfile2           | awk '(NR==1){s=length($2)/50; if(s<=25){s=25} if(s>=750){s=750} print int(s)}'`
-	pr=`cat ../protein/outfile | awk '(NR==1){s=length($2)/50; if(s<=25){s=25} if(s>=375){s=375} print int(s)}'`
-
 	bash ../fragmentation/cutter.sh outfile2 $nt >  outfile2.fr
-	bash ../fragmentation/cutter.sh ../protein/outfile   $pr >  ../protein/outfile.fr
+cd ../
+
+cd protein
+	pr=`cat ../protein/outfile | awk '(NR==1){s=length($2)/50; if(s<=25){s=25} if(s>=375){s=375} print int(s)}'`
+	bash ../fragmentation/cutter.sh outfile  $pr >  outfile.fr
 cd ../
 
 	# RNA LIBRARY GENERATION ######################################################################################
@@ -84,7 +85,7 @@ cd interactions.U/
 			echo "# protein / rna / raw score / dp " > ../../outputs/interactions.$1.$3.txt
 			cat pre-compiled/out.merged.txt >> ../../outputs/interactions.$1.$3.txt
 			rm prot/prot.lib rna/rna.lib
-			rm pre-compiled/out.merged.txt
+
 		cd ..
 cd ..
 
@@ -111,15 +112,11 @@ if [[ "$4" == "uniform" ]]; then
 	echo "Global Score computing"
 	date +"%m-%d-%y %r"
 
-	awk '{print "protein_"$1,"rna_"$2,$3,$4}' ../algorithm-catRAPID_stand-alone/combine_parallel/pre-compiled/out.merged.txt > interactions.$1.$3.txt
+	awk '{print "protein_"$1,"rna_"$2,$3,$4}' ../interactions.U/combine_parallel/pre-compiled/out.merged.txt > interactions.$1.$3.txt
 	bash start.sh interactions.$1.$3.txt -1 > processed.txt
 	awk '{printf "%.2f\n", ($2+1)/2}' processed.txt > ../outputs/filter.tmp
 fi
-if [[ "$4" == "weighted" ]]; then
-	cat ../algorithm-catRAPID_stand-alone/combine_parallel/pre-compiled/out.merged.txt > interactions.$1.$3.txt
-	bash start.sh interactions.$1.$3.txt 1 > processed.txt
-	awk '{printf "%.2f\n", ($2+1)/2}' processed.txt > ../outputs/filter.tmp
-fi
+
 cd ..
 
 
