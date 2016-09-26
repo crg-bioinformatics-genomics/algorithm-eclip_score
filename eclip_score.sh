@@ -40,8 +40,8 @@ cd ./rna
 	nt=`cat outfile2           | awk '(NR==1){s=length($2)/50; if(s<=25){s=25} if(s>=750){s=750} print int(s)}'`
 	pr=`cat ../protein/outfile | awk '(NR==1){s=length($2)/50; if(s<=25){s=25} if(s>=375){s=375} print int(s)}'`
 
-	bash bin/cutter.sh outfile2  $nt >  outfile2.fr
-	bash bin/cutter.sh ../protein/outfile   $pr >  ../protein/outfile.fr
+	bash ../fragmentation/cutter.sh outfile2 $nt >  outfile2.fr
+	bash ../fragmentation/cutter.sh ../protein/outfile   $pr >  ../protein/outfile.fr
 cd ../
 
 	# RNA LIBRARY GENERATION ######################################################################################
@@ -79,6 +79,7 @@ cd interactions.U/
 	cp ../outputs/rna.library.$1.$3.txt combine_parallel/rna/rna.lib
 
 		cd combine_parallel/
+			mkdir pre-compiled/
 			bash parallelize.sh 8 prot/prot.lib rna/rna.lib
 			echo "# protein / rna / raw score / dp " > ../../outputs/interactions.$1.$3.txt
 			cat pre-compiled/out.merged.txt >> ../../outputs/interactions.$1.$3.txt
