@@ -1,0 +1,17 @@
+# Random seed        1
+# Updated every      1 step(s)
+# Parameters         params/coefficients.txt
+# Variables          10
+# uploading...       
+# Positives          470
+# Coefficients       50 / 50
+# ./data/bait.posi
+# ./data/prey.posi
+# Negatives          10 vs 470
+# ./params/bait.nega4
+# ./params/prey.nega4
+# upload done.
+# checking coefficients...
+# OK! running montecarlo...  
+# Datasets           47 vs 1
+        0 -1.000 -1.000  43  35  0.000 3  0.000 6  0.000
