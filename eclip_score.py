@@ -5,6 +5,7 @@ import os
 import subprocess
 import shutil, errno
 import sys
+import json
 
 # we want to be agnostic to where the script is ran
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -12,25 +13,25 @@ WORKER_PATH = os.path.realpath(os.curdir)
 
 # Function to copy the output directory content
 def copyfolder(src, dst):
-    try:
-        shutil.copytree(src, dst)
-    except OSError as exc: # python >2.5
-        if exc.errno == errno.ENOTDIR:
-            shutil.copy(src, dst)
-        else: raise
+	try:
+		shutil.copytree(src, dst)
+	except OSError as exc: # python >2.5
+		if exc.errno == errno.ENOTDIR:
+			shutil.copy(src, dst)
+		else: raise
 
 # read the task definition yaml file
-with open(os.path.join(SCRIPT_PATH, "catrapid_fragments_ultra.yaml"), "r") as task_f:
+with open(os.path.join(SCRIPT_PATH, "eclip_score.yaml"), "r") as task_f:
 	task_definition = yaml.load(task_f)
 
 parser = argparse.ArgumentParser(
-   description='Launches catRAPID fragments with properly parset parameters')
+   description='Launches')
 
 # parser.add_argument(
-#    '-fileA', type=str, default=["none"], nargs=1, help='Dataset A')
+#	'-fileA', type=str, default=["none"], nargs=1, help='Dataset A')
 #
 # parser.add_argument(
-#    '-fileB', type=str, default=["none"], nargs=1, help='Dataset B')
+#	'-fileB', type=str, default=["none"], nargs=1, help='Dataset B')
 
 parser.add_argument(
    '-output_dir', type=str, nargs=1,
@@ -40,8 +41,8 @@ parser.add_argument(
 for item in task_definition['form_fields']:
    nargs = 1 if item['required'] else "?"
    parser.add_argument(
-       '-FORM%s'%item['name'], type=str, default=["none"], nargs=nargs,
-       help='Form argument: %s' % item)
+	   '-FORM%s'%item['name'], type=str, default=["none"], nargs=nargs,
+	   help='Form argument: %s' % item)
 
 # this parse_args stops if any unexpected arguments is passed
 args = parser.parse_args()
@@ -68,17 +69,7 @@ output_handle = open(protFile, "w")
 SeqIO.write(protSeq, output_handle, "fasta")
 output_handle.close()
 
-Rpat = re.compile('>.*?\n[GATCU]+', re.IGNORECASE)
-if Rpat.match(args.FORMrna_seq[0]) == None:
-	args.FORMrna_seq[0] = ">input_rna\n"+args.FORMrna_seq[0]
-rnaSeq = []
-for record in SeqIO.parse(StringIO.StringIO(args.FORMrna_seq[0]), "fasta"):
-	rnaSeq.append(record)
 
-rnaFile = os.path.join(OUTPUT_PATH.replace("output/", ""),"rna.fasta")
-output_handle = open(rnaFile, "w")
-SeqIO.write(rnaSeq, output_handle, "fasta")
-output_handle.close()
 
 os.chdir(SCRIPT_PATH)
 # print(WORKER_PATH)
@@ -95,9 +86,7 @@ else:
 	title = args.FORMtitle.replace(" ", "_")
 
 logfile = open("pylog."+str(random_number)+".txt","w")
-
-# cmd = """bash runcatrapid.fragments.sh "{}" "{}" "{}" "{}" "{}" "{}" "{}" """.format(random_number, args.FORMemail, title, args.FORMprotFrag[0], "150", os.path.join(WORKER_PATH,args.fileA[0].replace(' ', '-')), os.path.join(WORKER_PATH,args.fileB[0].replace(' ', '-')) )
-cmd = """bash eclip_score.sh "{}" "{}" "{}" "{}" "{}" "{}" "{}" "{}" """.format(random_number, args.FORMemail[0], title, args.FORMprotFrag[0], "150", protFile, rnaFile, args.FORMextras[0])
+cmd = """bash eclip_score.sh "{}" "{}" "{}" "{}" "{}"  """.format(random_number, args.FORMemail[0], title, "150", protFile)
 
 p = subprocess.Popen(cmd, cwd=SCRIPT_PATH, shell=True)
 
@@ -113,7 +102,7 @@ if p.returncode == 0:
 	logfile.write(TMP_PATH+"\n")
 	dirList=os.listdir(TMP_PATH)
 	shutil.copyfile(os.path.join(OUTPUT_PATH.replace("output/", ""),"protein.fasta"), OUTPUT_PATH+"protein.fasta")
-	shutil.copyfile(os.path.join(OUTPUT_PATH.replace("output/", ""),"rna.fasta"), OUTPUT_PATH+"rna.fasta")
+
 	logfile.write("copied fastas\n")
 	for file in dirList:
 		if os.path.isfile(TMP_PATH+file): #ignore directories
@@ -130,19 +119,12 @@ if p.returncode == 0:
 
 	settings.configure(TEMPLATE_DIRS=(os.path.join(SCRIPT_PATH,'./')), DEBUG=True, TEMPLATE_DEBUG=True)
 
-	logfile.write(args.FORMprotFrag[0]+"\n")
-	if args.FORMprotFrag[0] == "uniform":
-	#	# read the template file into a variable
-		with open(os.path.join(OUTPUT_PATH, "index.mat.tmp.html"), "r") as template_file:
-			template_string = "".join(template_file.readlines())
-		logfile.write("copied index.mat.tmp.html\n")
 
-	if args.FORMprotFrag[0] == "weighted":
-		with open(os.path.join(OUTPUT_PATH, "index.Z.tmp.html"), "r") as template_file:
-			template_string = "".join(template_file.readlines())
-		logfile.write("copied index.Z.tmp.html\n")
 
 	import datetime
+	with open(os.path.join(SCRIPT_PATH, "index.mat.html"), "r") as template_file:
+		template_string = "".join(template_file.readlines())
+	logfile.write("copied index.mat.tmp.html\n")
 
 	# create template from the string
 	t = Template(template_string)
@@ -153,13 +135,23 @@ if p.returncode == 0:
 			"title": title,
 			"rnaFrag" : "150",
 			"randoms" : random_number,
-# 			"fileA" : protFile,
-# 			"fileB" : rnaFile,
+#			 "fileA" : protFile,
+#			 "fileB" : rnaFile,
 			"generated" : str(datetime.datetime.now()),
 		}
 	)
 
 	# and this bit outputs it all into index.html
+	rnas=[]
+	values=[]
+	with open(os.path.join(OUTPUT_PATH,"filter.processed.txt"), "r") as fltr:
+		for line in fltr:
+			rnas.append(line.split()[0].strip())
+			values.append(line.split()[1].strip())
+	fltr.close()
+	with os.path.join(OUTPUT_PATH,"transcript.rows"),'w') as fobj:
+		json.dump(zip(rnas,values),fobj)
+	fobj.close()
 	with open(os.path.join(OUTPUT_PATH, "index.html"), "w") as output:
 		output.write(t.render(c))
 	logfile.write("created index.html\n")

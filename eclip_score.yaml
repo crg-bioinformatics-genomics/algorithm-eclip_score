@@ -1,0 +1,62 @@
+---
+title:      catRAPID RNA binding signature
+name:       eclip_score
+title_styled:   >
+    <i>cat</i>RAPID RNA binding signature
+version:    1.0
+description:    >
+    <p><i>cat</i>RAPID RNA binding signature (<i>cat</i>RAPID signature). This module searches for protein regions which are likely to interact with RNA sequences.</p>
+description_short:    >
+    Searches for RNA-binding regions
+nav_links:
+    -   title:  >
+            <i>cat</i>RAPID signature home
+        href:   >
+            http://service.tartaglialab.com/new_submission/signature
+    -   title:  >
+            Tutorial
+        href:   >
+            http://service.tartaglialab.com/static_files/shared/tutorial_signature.html
+    -   title:  >
+            Documentation
+        href:   >
+            http://service.tartaglialab.com/static_files/shared/documentation_signature.html
+    -   title:  >
+            Group page @ CRG
+        href:   >
+            http://pasteur.crg.es/portal/page/portal/827A462EAB6802B3E04012AC0E01291B
+
+form_fields:
+    -   name: title
+        description: Submission label (optional)
+        required: No
+        type: text
+    -   name: protein_seq
+        description: Protein sequence (FASTA format)
+        required: Yes
+        type: textarea
+        min_length: 60
+        max_length: 10000
+    -   name: email
+        description: Email address (optional, used for notification)
+        type: email
+        required: No
+
+examples:
+    #-   reference_id:   55985
+    #    title:          <br>CELF1
+    #    description:    a canonical RNA-binding protein ( from <a href="http://www.sciencedirect.com/science/article/pii/S0300908405002634" target="_blank">Biochimie 2006</a>)
+    -   reference_id:   58967
+        title:          FMRP
+        description:    a canonical RNA-binding protein ( from <a href="http://www.nature.com/nrn/journal/v6/n5/box/nrn1667_BX1.html" target="_blank">Nature Reviews Neuroscience 2005</a>)
+    -   reference_id:   58968
+        title:          TMM70
+        description:    a non RNA-binding protein ( from <a href="http://www.ncbi.nlm.nih.gov/pubmed/22658674" target="_blank">Cell 2012</a>)
+
+algorithm:
+    command:              "eclip_score.py -output_dir=<output_dir>"
+    processing_timeout:   7200
+
+# for the processing part
+output:
+    -
