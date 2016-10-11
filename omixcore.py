@@ -149,7 +149,7 @@ if p.returncode == 0:
 			rnas.append(line.split()[0].strip())
 			values.append(line.split()[1].strip())
 	fltr.close()
-	with os.path.join(OUTPUT_PATH,"transcript.rows"),'w') as fobj:
+	with open(os.path.join(OUTPUT_PATH,"transcript.rows"),'w') as fobj:
 		json.dump(zip(rnas,values),fobj)
 	fobj.close()
 	with open(os.path.join(OUTPUT_PATH, "index.html"), "w") as output:
