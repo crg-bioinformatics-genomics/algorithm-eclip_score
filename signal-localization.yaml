@@ -1,0 +1,92 @@
+---
+title:      Omi-X
+name:       Omi-X
+title_styled:   >
+    Omi-X
+version:    1.0
+description:    >
+    <p>Omi-X Signal localization mode</p>
+description_short:    >
+    Omi-X short description
+nav_links:
+    -   title:  >
+            Omi-X home
+        href:   >
+            http://service.tartaglialab.com/new_submission/Omi-X
+    -   title:  >
+            Tutorial
+        href:   >
+            http://service.tartaglialab.com/static_files/shared/tutorial_Omi-X.html
+    -   title:  >
+            Documentation
+        href:   >
+            http://service.tartaglialab.com/static_files/shared/documentation_Omi-X.html
+    -   title:  >
+            Group page @ CRG
+        href:   >
+            http://pasteur.crg.es/portal/page/portal/827A462EAB6802B3E04012AC0E01291B
+
+form_fields:
+    -   name: protein_seq
+        description: Protein sequence (FASTA format)
+        required: Yes
+        type: textarea
+        min_length: 50
+        max_length: 10000
+    -   name: title
+        description: Submission label (optional)
+        required: No
+        type: text
+    -   name: Transcript_1
+        description: Transcript ID 1
+        required: Yes
+        type: textarea
+        min_length: 1
+        max_length: 20
+    -   name: Transcript_2
+        description: Transcript ID 2
+        required: Yes
+        type: textarea
+        min_length: 1
+        max_length: 20
+    -   name: Transcript_3
+        description: Transcript ID 3
+        required: Yes
+        type: textarea
+        min_length: 1
+        max_length: 20
+    -   name: Transcript_4
+        description: Transcript ID 4
+        required: Yes
+        type: textarea
+        min_length: 1
+        max_length: 20
+    -   name: Transcript_5
+        description: Transcript ID 5
+        required: Yes
+        type: textarea
+        min_length: 1
+        max_length: 20
+    -   name: email
+        description: Email address (optional, used for notification)
+        type: email
+        required: No
+
+examples:
+    #-   reference_id:   55985
+    #    title:          <br>CELF1
+    #    description:    a canonical RNA-binding protein ( from <a href="http://www.sciencedirect.com/science/article/pii/S0300908405002634" target="_blank">Biochimie 2006</a>)
+    -   reference_id:   58967
+        title:          FMRP
+        description:    a canonical RNA-binding protein ( from <a href="http://www.nature.com/nrn/journal/v6/n5/box/nrn1667_BX1.html" target="_blank">Nature Reviews Neuroscience 2005</a>)
+    -   reference_id:   58968
+        title:          TMM70
+        description:    a non RNA-binding protein ( from <a href="http://www.ncbi.nlm.nih.gov/pubmed/22658674" target="_blank">Cell 2012</a>)
+
+algorithm:
+    command:              "eclip_score.py -output_dir=<output_dir>"
+    processing_timeout:   7200
+
+# for the processing part
+output:
+    -

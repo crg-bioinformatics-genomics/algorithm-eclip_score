@@ -51,16 +51,16 @@
             <p><a href="http://service.tartaglialab.com/">Portal Home</a></p>
         </div>
         <div id="title_server">
-            <h1>Global Score</h1>
+            <h1>Omi-X</h1>
         </div>
         <div id="navbar_server">
             <h3>
              [
              <a target="" href="http://service.tartaglialab.com/page/catrapid_group"><i>cat</i>RAPID home</a>
              -
-             <a target="" href="http://service.tartaglialab.com/static_files/shared/documentation_globalscore.html#7">Documentation</a>
+             <a target="" href="http://service.tartaglialab.com/static_files/shared/documentation_Omi-X.html">Documentation</a>
              -
-             <a target="" href="http://service.tartaglialab.com/static_files/shared/tutorial_globalscore.html#5">Tutorial</a>
+             <a target="" href="http://service.tartaglialab.com/static_files/shared/tutorial_Omi-X.html">Tutorial</a>
              -
              <a target="" href="http://pasteur.crg.es/portal/page/portal/827A462EAB6802B3E04012AC0E01291B">Group page @ CRG</a>
              ]
@@ -95,12 +95,46 @@
 					<tbody id="rna_ids">
 					</tbody>
 				</table>
-
+				<br>
+				<br>
+	         <p>Would you like to continue with the  <a id="mylink" href="">signal localization?</a> </p>
+        <br>
+	 			<br>
 				<script type="text/javascript" src="script.js"></script>
 				<script type="text/javascript">
 					rna_ids = Array()
 					full_url = $(location).attr('href')
 					url_directory = full_url.split('/').slice(0, -1).join('/')
+					window.onload = function() {
+
+							//Get a reference to the link on the page
+							// with an id of "mylink"
+							var a = document.getElementById("mylink");
+
+							//Set code to run when the link is clicked
+							// by assigning a function to "onclick"
+							a.onclick = function() {
+								a.href="http://localhost:8081/new_submission/signal-localization/92909"
+								a.href="http://s.tartaglialab.com/new_submission/omix-signal-localization/{{randoms}}"
+								var checkedValue = '';
+								var inputElements = document.getElementsByClassName('rnaCheckbox');
+								for(var i=0; inputElements[i]; ++i){
+								      if(inputElements[i].checked){
+												checkedValue=checkedValue.concat(inputElements[i].value,'_')
+								      }
+								}
+								checkedValue=checkedValue.substring(0, checkedValue.length - 1);
+								if(checkedValue.length>1){
+									a.href=a.href.concat('/',checkedValue)
+									return true
+								}
+								else{
+									alert("Choose at least one transcript to proceed!")
+									return false;
+								}
+							}
+						}
+
 						$().ready(function() {
 							initialise_table()
 								sorter = new TINY.table.sorter("sorter");
@@ -136,7 +170,7 @@
 
 								for (i = 0; i < rna_ids.length; i++) {
 										var cur_li = "<tr><td>"
-										cur_li += "<input type='checkbox' value="+rna_ids[i][0]+">"
+										cur_li += "<input class='rnaCheckbox' type='checkbox' value="+rna_ids[i][0]+">"
 										cur_li += "</td>"
 										cur_li += "<td>"+rna_ids[i][0]
 										cur_li += "</td>"
@@ -145,6 +179,12 @@
 										cur_li += "</tr>"
 										$("#rna_ids").append(cur_li)
 								}
+								$('input[type=checkbox]').on('change', function (e) {
+				    				if ($('input[type=checkbox]:checked').length > 5) {
+				        			$(this).prop('checked', false);
+				        			alert("allowed only 5");
+				    				}
+								});
 
 							}
 

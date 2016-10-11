@@ -1,26 +1,26 @@
 ---
-title:      catRAPID RNA binding signature
-name:       eclip_score
+title:      OmiXcore
+name:       OmiXcore
 title_styled:   >
-    <i>cat</i>RAPID RNA binding signature
+    OmiXcore
 version:    1.0
 description:    >
-    <p><i>cat</i>RAPID RNA binding signature (<i>cat</i>RAPID signature). This module searches for protein regions which are likely to interact with RNA sequences.</p>
+    <p>OmiXcore Description</p>
 description_short:    >
-    Searches for RNA-binding regions
+    OmiXcore short description
 nav_links:
     -   title:  >
-            <i>cat</i>RAPID signature home
+            OmiXcore home
         href:   >
-            http://service.tartaglialab.com/new_submission/signature
+            http://service.tartaglialab.com/new_submission/OmiXcore
     -   title:  >
             Tutorial
         href:   >
-            http://service.tartaglialab.com/static_files/shared/tutorial_signature.html
+            http://service.tartaglialab.com/static_files/shared/tutorial_OmiXcore.html
     -   title:  >
             Documentation
         href:   >
-            http://service.tartaglialab.com/static_files/shared/documentation_signature.html
+            http://service.tartaglialab.com/static_files/shared/documentation_OmiXcore.html
     -   title:  >
             Group page @ CRG
         href:   >
@@ -35,7 +35,7 @@ form_fields:
         description: Protein sequence (FASTA format)
         required: Yes
         type: textarea
-        min_length: 60
+        min_length: 50
         max_length: 10000
     -   name: email
         description: Email address (optional, used for notification)
@@ -54,7 +54,7 @@ examples:
         description:    a non RNA-binding protein ( from <a href="http://www.ncbi.nlm.nih.gov/pubmed/22658674" target="_blank">Cell 2012</a>)
 
 algorithm:
-    command:              "eclip_score.py -output_dir=<output_dir>"
+    command:              "omixcore.py -output_dir=<output_dir>"
     processing_timeout:   7200
 
 # for the processing part
