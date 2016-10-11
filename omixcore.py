@@ -21,7 +21,7 @@ def copyfolder(src, dst):
 		else: raise
 
 # read the task definition yaml file
-with open(os.path.join(SCRIPT_PATH, "eclip_score.yaml"), "r") as task_f:
+with open(os.path.join(SCRIPT_PATH, "omixcore.yaml"), "r") as task_f:
 	task_definition = yaml.load(task_f)
 
 parser = argparse.ArgumentParser(
@@ -86,7 +86,7 @@ else:
 	title = args.FORMtitle.replace(" ", "_")
 
 logfile = open("pylog."+str(random_number)+".txt","w")
-cmd = """bash eclip_score.sh "{}" "{}" "{}" "{}" "{}"  """.format(random_number, args.FORMemail[0], title, "150", protFile)
+cmd = """bash omixcore.sh "{}" "{}" "{}" "{}" "{}"  """.format(random_number, args.FORMemail[0], title, "150", protFile)
 
 p = subprocess.Popen(cmd, cwd=SCRIPT_PATH, shell=True)
 

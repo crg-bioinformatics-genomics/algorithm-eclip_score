@@ -1,5 +1,5 @@
 #!/bin/bash
-# bash eclip_score.sh <random_number> <email_address> <title> <type> <protein file> 
+# bash omixcore.sh <random_number> <email_address> <title> <type> <protein file> 
 echo $1 $2 $3 $4 $5
 
 set -e
