@@ -1,10 +1,11 @@
 #!/bin/bash
-# bash omixcore.sh <random_number> <email_address> <title> <type> <protein file> 
+# bash omixcore.sh <random_number> <email_address> <title> <type> <protein file>
 echo $1 $2 $3 $4 $5
 
 set -e
 #set -o pipeline
 
+script_folder=$(pwd)
 if [ -s tmp/$1 ]; then
 	rm -fr tmp/$1
 fi
@@ -62,7 +63,8 @@ cd interactions.U/
 				mkdir pre-compiled/
 			fi
 
-			python multiplier.py 10 "prot" "lincrnas"
+			rna_lib_folder=$(echo $script_folder | awk '{print $0"/lincrnas/"}')
+			python multiplier.py 10 "prot" $rna_lib_folder
 			echo "# protein / rna / raw score / dp " > ../../outputs/interactions.$1.$3.txt
 			cat pre-compiled/* >> ../../outputs/interactions.$1.$3.txt
 			#cat pre-compiled/* > pre-compiled/out.merged.txt

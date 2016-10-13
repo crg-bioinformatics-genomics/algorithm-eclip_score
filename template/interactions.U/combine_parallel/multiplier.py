@@ -9,12 +9,11 @@ current=os.path.dirname(os.path.realpath(__file__))
 
 def main(argv):
 
-    if len(sys.argv)==2:
-        cores = sys.argv[1]
-        if not RepresentsInt(cores):
-            cores=4
-        else:
-            cores=int(cores)
+    cores = sys.argv[1]
+    if not RepresentsInt(cores):
+        cores=4
+    elif int(cores)>0:
+        cores=int(cores)
     else:
         cores=4
     print "Cores used: ", cores
@@ -25,12 +24,7 @@ def main(argv):
 
 #    IPython.embed()
     pool = Pool(processes=cores)
-    for prot_file in os.listdir(os.path.join(current,protein_lib_folder)):
-        if not prot_file.startswith("."):
-            libchecker(os.path.join(current,protein_lib_folder,prot_file))
-    for rna_file in os.listdir(os.path.join(current,rna_lib_folder)):
-        if not rna_file.startswith("."):
-            libchecker(os.path.join(current,rna_lib_folder,rna_file))
+
 
     for prot_file in os.listdir(os.path.join(current,protein_lib_folder)):
         if not prot_file.startswith("."):
@@ -108,26 +102,6 @@ def f(rna_file,prot_file):
             for rf_index in range(0,len(rna_fragments_summed)):
                 writef.writelines(prot_frag_names[pf_index]+" "+rna_frag_names[rf_index]+" "+ str(round(sum(np.dot(table,rna_fragments_summed[rf_index])),2))+" -1\n")
 
-
-def libchecker(library):
-    name_dict=dict()
-#    IPython.embed()
-    with open(library, "r") as tsv:
-        for line in csv.reader(tsv, dialect="excel-tab"):
-            if line[0].strip() in name_dict:
-
-                name_dict[line[0].strip()]+=1
-            else:
-                name_dict[line[0].strip()]=1
-    tsv.close()
-    with open(library, "r") as tsv:
-        lines=tsv.readlines()
-    tsv.close()
-    with open(library, "w") as tsv:
-        for line in lines:
-            if name_dict[line.split()[0]]==10:
-                tsv.writelines(line)
-    tsv.close()
 
 def RepresentsInt(s):
     try:
