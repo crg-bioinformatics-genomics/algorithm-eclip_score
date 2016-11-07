@@ -124,13 +124,13 @@ if p.returncode == 0:
 
 	import datetime
 	with open(os.path.join(OUTPUT_PATH,"Signature_prediction.txt"), "r") as sign_result:
-		PredictionScore=float(sign_result.readlines().strip)
+		PredictionScore=float(sign_result.readlines()[0])
 	if PredictionScore<0.5:
 		with open(os.path.join(SCRIPT_PATH, "index.nrbp.html"), "r") as template_file:
 			   template_string = "".join(template_file.readlines())
 		c = Context(
 		{"title": title,
-		
+
 		 "PredictionScore" : PredictionScore,
 		 "randoms" : random_number,
 		 "generated" : str(datetime.datetime.now()), })
