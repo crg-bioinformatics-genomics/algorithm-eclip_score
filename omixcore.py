@@ -63,6 +63,7 @@ if Ppat.match(args.FORMprotein_seq[0]) == None:
 protSeq = []
 for record in SeqIO.parse(StringIO.StringIO(args.FORMprotein_seq[0]), "fasta"):
 	protSeq.append(record)
+	break
 
 protFile = os.path.join(OUTPUT_PATH.replace("output/", ""),"protein.fasta")
 output_handle = open(protFile, "w")
@@ -122,39 +123,52 @@ if p.returncode == 0:
 
 
 	import datetime
-	with open(os.path.join(SCRIPT_PATH, "index.mat.html"), "r") as template_file:
-		template_string = "".join(template_file.readlines())
-	logfile.write("copied index.mat.tmp.html\n")
+	with open(os.path.join(OUTPUT_PATH,"Signature_prediction.txt"), "r") as sign_result:
+		PredictionScore=float(sign_result.readlines().strip)
+	if PredictionScore<0.5:
+		with open(os.path.join(SCRIPT_PATH, "index.nrbp.html"), "r") as template_file:
+			   template_string = "".join(template_file.readlines())
+		c = Context(
+		{"title": title,
+		
+		 "PredictionScore" : PredictionScore,
+		 "randoms" : random_number,
+		 "generated" : str(datetime.datetime.now()), })
 
-	# create template from the string
-	t = Template(template_string)
+	else:
+		with open(os.path.join(SCRIPT_PATH, "index.mat.html"), "r") as template_file:
+			template_string = "".join(template_file.readlines())
+		logfile.write("copied index.mat.tmp.html\n")
 
-	# context contains variables to be replaced
-	c = Context(
-		{
-			"title": title,
-			"rnaFrag" : "150",
-			"randoms" : random_number,
-#			 "fileA" : protFile,
-#			 "fileB" : rnaFile,
-			"generated" : str(datetime.datetime.now()),
-		}
-	)
+		# create template from the string
+		t = Template(template_string)
 
-	# and this bit outputs it all into index.html
-	rnas=[]
-	values=[]
-	with open(os.path.join(OUTPUT_PATH,"filter.processed.txt"), "r") as fltr:
-		for line in fltr:
-			rnas.append(line.split()[0].strip())
-			values.append(line.split()[1].strip())
-	fltr.close()
-	with open(os.path.join(OUTPUT_PATH,"transcript.rows"),'w') as fobj:
-		json.dump(zip(rnas,values),fobj)
-	fobj.close()
-	with open(os.path.join(OUTPUT_PATH, "index.html"), "w") as output:
-		output.write(t.render(c))
-	logfile.write("created index.html\n")
+		# context contains variables to be replaced
+		c = Context(
+			{
+				"title": title,
+				"rnaFrag" : "150",
+				"randoms" : random_number,
+				 "fileA" : protFile,
+	#			 "fileB" : rnaFile,
+				"generated" : str(datetime.datetime.now()),
+			}
+		)
+
+		# and this bit outputs it all into index.html
+		rnas=[]
+		values=[]
+		with open(os.path.join(OUTPUT_PATH,"filter.processed.txt"), "r") as fltr:
+			for line in fltr:
+				rnas.append(line.split()[0].strip())
+				values.append(line.split()[1].strip())
+		fltr.close()
+		with open(os.path.join(OUTPUT_PATH,"transcript.rows"),'w') as fobj:
+			json.dump(zip(rnas,values),fobj)
+		fobj.close()
+		with open(os.path.join(OUTPUT_PATH, "index.html"), "w") as output:
+			output.write(t.render(c))
+		logfile.write("created index.html\n")
 
 else:
 	sys.exit("The execution of the bash script failed.")
