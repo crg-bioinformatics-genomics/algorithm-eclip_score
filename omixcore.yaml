@@ -37,6 +37,27 @@ form_fields:
         type: textarea
         min_length: 50
         max_length: 10000
+    -   name: mode
+        description: Run against all lincRNAs or against a custom RNA sequence
+        type: radio
+        hidden: No
+        required: Yes
+        entries:
+            -   title:  lincRNAs
+                value:  lincrnas
+                hides:
+                  - rna_seq
+
+            -   title:  Custom
+                value:  custom
+                shows:
+                  - rna_seq
+    -   name: rna_seq
+        description: RNA sequence (FASTA format - min 50 nt)
+        required: No
+        type: textarea
+        min_length: 50
+        hidden: No
     -   name: email
         description: Email address (optional, used for notification)
         type: email
@@ -46,16 +67,16 @@ examples:
     #-   reference_id:   55985
     #    title:          <br>CELF1
     #    description:    a canonical RNA-binding protein ( from <a href="http://www.sciencedirect.com/science/article/pii/S0300908405002634" target="_blank">Biochimie 2006</a>)
-    -   reference_id:   58967
-        title:          FMRP
-        description:    a canonical RNA-binding protein ( from <a href="http://www.nature.com/nrn/journal/v6/n5/box/nrn1667_BX1.html" target="_blank">Nature Reviews Neuroscience 2005</a>)
-    -   reference_id:   58968
-        title:          TMM70
-        description:    a non RNA-binding protein ( from <a href="http://www.ncbi.nlm.nih.gov/pubmed/22658674" target="_blank">Cell 2012</a>)
+    -   reference_id:
+        title:
+        description:
+    -   reference_id:
+        title:
+        description:
 
 algorithm:
     command:              "omixcore.py -output_dir=<output_dir>"
-    processing_timeout:   7200
+    processing_timeout:   
 
 # for the processing part
 output:

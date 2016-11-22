@@ -15,7 +15,7 @@ cd   tmp/$1
 signature_prediction=`python RBPprofiler.py`
 rbp=$(echo $signature_prediction | awk '{print $NF}')
 
-if (( rbp > =0.5))
+if [[ $rbp > 0.5 ]] || [[ $rbp = 0.5 ]]
 then
 	# modifies fasta files into 2 columns
 	# memo: outfile is the protein file
