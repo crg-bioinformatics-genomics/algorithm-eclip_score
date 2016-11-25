@@ -11,7 +11,7 @@ if [ -s tmp/$1 ]; then
 fi
 cp -r template tmp/$1
 cd   tmp/$1
-
+cp $5 data/inseq.fasta
 signature_prediction=`python RBPprofiler.py`
 rbp=$(echo $signature_prediction | awk '{print $NF}')
 
