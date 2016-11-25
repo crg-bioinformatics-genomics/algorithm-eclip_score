@@ -81,13 +81,18 @@ then
 				date +"%m-%d-%y %r"
 
 				for i in `ls ../interactions.U/combine_parallel/pre-compiled/`; do
+					(
 					prot_rna=$(echo $i | awk -F '.' '{print $3}')
 					rna=$(echo $prot_rna | awk -F '-' '{print $2}')
 					awk '{print "protein_"$1,"rna_"$2,$3,$4}' ../interactions.U/combine_parallel/pre-compiled/$i > interactions.$prot_rna.txt
 					bash start.sh interactions.$prot_rna.txt > $prot_rna.processed.txt
 					echo $rna $(awk '{printf "%.2f\n", ($2+1)/2}' $prot_rna.processed.txt) >> ../outputs/filter.processed.txt
+					rm -fr interactions.$prot_rna.txt
+					rm -fr $prot_rna.processed.txt
+					rm -fr ../interactions.U/combine_parallel/pre-compiled/$i
+					) &
 				done
-
+				wait
 
 			cd ..
 
