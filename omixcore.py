@@ -67,8 +67,12 @@ for record in SeqIO.parse(StringIO.StringIO(args.FORMprotein_seq[0]), "fasta"):
 
 protFile = os.path.join(OUTPUT_PATH.replace("output/", ""),"protein.fasta")
 output_handle = open(protFile, "w")
-SeqIO.write(protSeq, output_handle, "fasta")
+for record in SeqIO.parse(StringIO.StringIO(args.FORMprotein_seq[0]), "fasta"):
+	output_handle.write(str(">input_protein\n"+record.seq))
+	break
+# SeqIO.write(protSeq, output_handle, "fasta")
 output_handle.close()
+
 
 
 

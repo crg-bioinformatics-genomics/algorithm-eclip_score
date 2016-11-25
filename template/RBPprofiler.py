@@ -166,7 +166,7 @@ infile=open(fastafile,"r")
 posRBP={}
 name=""
 for line in infile:
-	if line.startswith(">"):
+	if line!=">input_protein":
 		posRBP["RBP"]=line
 
 
