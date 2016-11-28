@@ -70,8 +70,8 @@ then
 
 				rna_lib_folder=$(echo $script_folder | awk '{print $0"/lincrnas/"}')
 				python multiplier.py 10 "prot" $rna_lib_folder
-				echo "# protein / rna / raw score / dp " > ../../outputs/interactions.$1.$3.txt
-				cat pre-compiled/* >> ../../outputs/interactions.$1.$3.txt
+				#echo "# protein / rna / raw score / dp " > ../../outputs/interactions.$1.$3.txt
+				#cat pre-compiled/* >> ../../outputs/interactions.$1.$3.txt
 				#cat pre-compiled/* > pre-compiled/out.merged.txt
 			cd ../../
 
