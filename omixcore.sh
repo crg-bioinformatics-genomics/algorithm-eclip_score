@@ -79,21 +79,36 @@ then
 
 				echo "Global Score computing"
 				date +"%m-%d-%y %r"
+				NUMJOBS=10
+				n=0
+				for i in `ls ../interactions.U/combine_parallel/pre-compiled/out.merged.*`
+				do
+				  if [ $((n+=1)) -gt $NUMJOBS ]; then
+				    n=1
+				  fi
+				  todir=../interactions.U/combine_parallel/pre-compiled/$n
+				  [ -d "$todir" ] || mkdir "$todir"
+				  mv "$i" "$todir"
 
-				for i in `ls ../interactions.U/combine_parallel/pre-compiled/`; do
-					(
-					prot_rna=$(echo $i | awk -F '.' '{print $3}')
-					rna=$(echo $prot_rna | awk -F '-' '{print $2}')
-					awk '{print "protein_"$1,"rna_"$2,$3,$4}' ../interactions.U/combine_parallel/pre-compiled/$i > interactions.$prot_rna.txt
-					bash start.sh interactions.$prot_rna.txt > $prot_rna.processed.txt
-					echo $rna $(awk '{printf "%.2f\n", ($2+1)/2}' $prot_rna.processed.txt) >> ../outputs/filter.processed.txt
-					rm -fr interactions.$prot_rna.txt
-					rm -fr $prot_rna.processed.txt
-					rm -fr ../interactions.U/combine_parallel/pre-compiled/$i
-					) &
+ 				done
+
+				for j in `ls ../interactions.U/combine_parallel/pre-compiled/`
+				do
+					cp -r template dir.$j
+					for i in `ls ../interactions.U/combine_parallel/pre-compiled/$j`
+					do
+						cd dir.$j
+						prot_rna=$(echo $i | awk -F '.' '{print $3}')
+						rna=$(echo $prot_rna | awk -F '-' '{print $2}')
+						awk '{print "protein_"$1,"rna_"$2,$3,$4}' ../../interactions.U/combine_parallel/pre-compiled/$j/$i > interactions.$prot_rna.txt
+						bash start.sh interactions.$prot_rna.txt > $prot_rna.processed.txt
+						echo $rna $(awk '{printf "%.2f\n", ($2+1)/2}' $prot_rna.processed.txt) >> filter.processed.txt
+						cd ..
+					done
 				done
 				wait
-
+				cat dir.*/filter.processed.txt >>../outputs/filter.processed.txt
+				rm -fr dir.*
 			cd ..
 
 

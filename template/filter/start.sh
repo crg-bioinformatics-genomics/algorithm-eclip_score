@@ -5,7 +5,7 @@
 # pcre-config --libs --cflags
 
 # cleans
-rm input*
+#rm input*
 echo "del" > new.run; rm new.run
 
 # input file
