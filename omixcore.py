@@ -164,8 +164,9 @@ if p.returncode == 0:
 		values=[]
 		with open(os.path.join(OUTPUT_PATH,"filter.processed.txt"), "r") as fltr:
 			for line in fltr:
-				rnas.append(line.split()[0].strip())
-				values.append(line.split()[1].strip())
+				if len(line.split())==2:
+					rnas.append(line.split()[0].strip())
+					values.append(line.split()[1].strip())
 		fltr.close()
 		with open(os.path.join(OUTPUT_PATH,"transcript.rows"),'w') as fobj:
 			json.dump(zip(rnas,values),fobj)
