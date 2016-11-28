@@ -94,7 +94,7 @@ then
 
 				for j in `ls ../interactions.U/combine_parallel/pre-compiled/`
 				do
-					cp -r template dir.$j
+					( cp -r template dir.$j
 					for i in `ls ../interactions.U/combine_parallel/pre-compiled/$j`
 					do
 						cd dir.$j
@@ -104,7 +104,7 @@ then
 						bash start.sh interactions.$prot_rna.txt > $prot_rna.processed.txt
 						echo $rna $(awk '{printf "%.2f\n", ($2+1)/2}' $prot_rna.processed.txt) >> filter.processed.txt
 						cd ..
-					done
+					done ) &
 				done
 				wait
 				cat dir.*/filter.processed.txt >>../outputs/filter.processed.txt
