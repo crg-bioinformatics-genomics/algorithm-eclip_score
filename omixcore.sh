@@ -13,9 +13,9 @@ fi
 cp -r template tmp/$1
 cd   tmp/$1
 cp $5 data/inseq.fasta
-#signature_prediction=`python RBPprofiler.py`
-#rbp=$(echo $signature_prediction | awk '{print $NF}')
-rbp=1
+signature_prediction=`python RBPprofiler.py`
+rbp=$(echo $signature_prediction | awk '{print $NF}')
+
 if [[ $rbp > 0.5 ]] || [[ $rbp = 0.5 ]]
 then
 	# modifies fasta files into 2 columns
