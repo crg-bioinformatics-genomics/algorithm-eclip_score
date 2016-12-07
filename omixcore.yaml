@@ -57,7 +57,7 @@ form_fields:
         required: No
         type: textarea
         min_length: 50
-        hidden: No
+        hidden: Yes
     -   name: email
         description: Email address (optional, used for notification)
         type: email
@@ -76,7 +76,7 @@ examples:
 
 algorithm:
     command:              "omixcore.py -output_dir=<output_dir>"
-    processing_timeout:   
+    processing_timeout:
 
 # for the processing part
 output:
