@@ -94,7 +94,11 @@ then
 		cd ../../
 
 		echo "Custom rna library generation"
+
 		cd rna.libraries.U/
+			if [ ! -s outs ]; then
+				mkdir outs
+			fi
 			bash superjob.sh
 		cd ..
 		rna_lib_folder=$(pwd | awk '{print $0"/rna.libraries.U/outs/"}')
