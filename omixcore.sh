@@ -61,15 +61,15 @@ then
 		if [ ! -s rna/rna_seqs_oneline/ ]; then
 			mkdir rna/rna_seqs_oneline/
 		fi
+		if [ ! -s rna/rna_seqs_fragmented ]; then
+			mkdir rna/rna_seqs_fragmented
+		fi
 		for i in `ls $rnafolder`
 		do
 			sed 's/[\| | \\ | \/ | \* | \$ | \# | \? | \! ]/./g' $rnafolder/$i | awk '(length($1)>=1)' | awk '($1~/>/){gsub(" ", "."); printf "\n%s\t", $1} ($1!~/>/){gsub(/[Uu]/, "T", $1); printf "%s",toupper($1)}' | awk '(NF==2)' | head -1 | sed 's/>\.//g;s/>//g' | awk '{print substr($1,1,12)"_"NR, $2}' >  ./rna/rna_seqs_oneline/$i
 		done
 		cd fragmentation
 			echo "Custom Rna fragmentation"
-			if [ ! -s rna_seqs_fragmented ]; then
-				mkdir rna_seqs_fragmented
-			fi
 			for i in `ls ../rna/rna_seqs_oneline/`
 				do
 					bash rna.job.cutter.sh ../rna/rna_seqs_oneline/$i > ../rna/rna_seqs_fragmented/$i.rna.fragm.seq;

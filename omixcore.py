@@ -140,7 +140,7 @@ logfile = open("pylog."+str(random_number)+".txt","w")
 if args.FORMmode[0]=="custom" and valid_entries==0:
 	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number)
 	logfile.write("created error index.html\n")
-	sys.exit()
+	sys.exit("Wrong Submission. The execution of the bash script failed.")
 
 
 
@@ -234,9 +234,10 @@ if p.returncode == 0:
 		logfile.write("created index.html\n")
 
 else:
+	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number)
 	sys.exit("The execution of the bash script failed.")
 	logfile.write("bash script failed\n")
-	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number)
+
 
 logfile.write("that's it!\n")
 logfile.close()
