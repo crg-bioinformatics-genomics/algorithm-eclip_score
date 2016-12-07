@@ -6,6 +6,11 @@ import subprocess
 import shutil, errno
 import sys
 import json
+from django.template import Template
+from django.template import Context
+from django.conf import settings
+from django.template import Template
+import datetime
 import IPython
 # we want to be agnostic to where the script is ran
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -19,6 +24,23 @@ def copyfolder(src, dst):
 		if exc.errno == errno.ENOTDIR:
 			shutil.copy(src, dst)
 		else: raise
+
+def error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number):
+	settings.configure(TEMPLATE_DIRS=(os.path.join(SCRIPT_PATH,'./')), DEBUG=True, TEMPLATE_DEBUG=True)
+	with open(os.path.join(SCRIPT_PATH, "index.error.html"), "r") as template_file:
+		   template_string = "".join(template_file.readlines())
+
+	# create template from the string
+	t = Template(template_string)
+
+	c = Context(
+	{"title": title,
+	 "randoms" : random_number,
+	 "generated" : str(datetime.datetime.now()), })
+
+	with open(os.path.join(OUTPUT_PATH, "index.html"), "w") as output:
+		output.write(t.render(c))
+
 
 # read the task definition yaml file
 with open(os.path.join(SCRIPT_PATH, "omixcore.yaml"), "r") as task_f:
@@ -78,11 +100,15 @@ for record in SeqIO.parse(StringIO.StringIO(args.FORMrna_seq[0]), "fasta"):
 rnafolder=os.path.join(OUTPUT_PATH.replace("output/", ""),"rnas")
 if not os.path.exists(rnafolder):
     os.makedirs(rnafolder)
+
+valid_entries=0
 for entry in rnaSeq:
-	rnaFile = os.path.join(rnafolder,entry.id)
-	output_handle = open(rnaFile, "w")
-	SeqIO.write(entry, output_handle, "fasta")
-	output_handle.close()
+	if len(entry.seq)>0:
+		valid_entries+=1
+		rnaFile = os.path.join(rnafolder,entry.id)
+		output_handle = open(rnaFile, "w")
+		SeqIO.write(entry, output_handle, "fasta")
+		output_handle.close()
 
 protFile = os.path.join(OUTPUT_PATH.replace("output/", ""),"protein.fasta")
 output_handle = open(protFile, "w")
@@ -111,6 +137,13 @@ else:
 
 logfile = open("pylog."+str(random_number)+".txt","w")
 
+if args.FORMmode[0]=="custom" and valid_entries==0:
+	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number)
+	logfile.write("created error index.html\n")
+	sys.exit()
+
+
+
 
 cmd = """bash omixcore.sh "{}" "{}" "{}" "{}" "{}" "{}" "{}"  """.format(random_number, args.FORMemail[0], title, "150", protFile, args.FORMmode[0],rnafolder)
 
@@ -138,27 +171,31 @@ if p.returncode == 0:
 		copyfolder(SCRIPT_PATH+"/images", OUTPUT_PATH+"images")
 		logfile.write("copied images folder\n")
 
-	from django.template import Template
-	from django.template import Context
-	from django.conf import settings
-	from django.template import Template
+
 
 	settings.configure(TEMPLATE_DIRS=(os.path.join(SCRIPT_PATH,'./')), DEBUG=True, TEMPLATE_DEBUG=True)
 
 
 
-	import datetime
+
 	with open(os.path.join(OUTPUT_PATH,"Signature_prediction.txt"), "r") as sign_result:
 		PredictionScore=float(sign_result.readlines()[0])
 	if PredictionScore<0.5:
 		with open(os.path.join(SCRIPT_PATH, "index.nrbp.html"), "r") as template_file:
 			   template_string = "".join(template_file.readlines())
+
+		# create template from the string
+		t = Template(template_string)
 		c = Context(
 		{"title": title,
 
 		 "PredictionScore" : PredictionScore,
 		 "randoms" : random_number,
 		 "generated" : str(datetime.datetime.now()), })
+
+		with open(os.path.join(OUTPUT_PATH, "index.html"), "w") as output:
+ 			output.write(t.render(c))
+ 		logfile.write("created nrbp index.html\n")
 
 	else:
 		with open(os.path.join(SCRIPT_PATH, "index.mat.html"), "r") as template_file:
@@ -199,6 +236,7 @@ if p.returncode == 0:
 else:
 	sys.exit("The execution of the bash script failed.")
 	logfile.write("bash script failed\n")
+	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number)
 
 logfile.write("that's it!\n")
 logfile.close()
