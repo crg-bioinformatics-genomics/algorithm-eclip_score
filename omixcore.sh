@@ -1,10 +1,11 @@
 #!/bin/bash
-# bash omixcore.sh <random_number> <email_address> <title> <type> <protein file>
-echo $1 $2 $3 $4 $5
+# bash omixcore.sh <random_number>  <email_address> <title> <type> <protein file><mode> <rnafolder>
+echo $1 $2 $3 $4 $5 $6 $7
 
 set -e
 #set -o pipeline
-
+mode=$6
+rnafolder=$7
 script_folder=$(pwd)
 if [ -s tmp/$1 ]; then
 	rm -fr tmp/$1
@@ -12,9 +13,9 @@ fi
 cp -r template tmp/$1
 cd   tmp/$1
 cp $5 data/inseq.fasta
-signature_prediction=`python RBPprofiler.py`
-rbp=$(echo $signature_prediction | awk '{print $NF}')
-
+#signature_prediction=`python RBPprofiler.py`
+#rbp=$(echo $signature_prediction | awk '{print $NF}')
+rbp=1
 if [[ $rbp > 0.5 ]] || [[ $rbp = 0.5 ]]
 then
 	# modifies fasta files into 2 columns
@@ -54,7 +55,55 @@ then
 		cd ../
 	cd ../
 
+	if [[ $mode == "custom" ]]
+	then
+		echo "Rna sequence processing and fragmentation"
+		if [ ! -s rna/rna_seqs_oneline/ ]; then
+			mkdir rna/rna_seqs_oneline/
+		fi
+		for i in `ls $rnafolder`
+		do
+			sed 's/[\| | \\ | \/ | \* | \$ | \# | \? | \! ]/./g' $rnafolder/$i | awk '(length($1)>=1)' | awk '($1~/>/){gsub(" ", "."); printf "\n%s\t", $1} ($1!~/>/){gsub(/[Uu]/, "T", $1); printf "%s",toupper($1)}' | awk '(NF==2)' | head -1 | sed 's/>\.//g;s/>//g' | awk '{print substr($1,1,12)"_"NR, $2}' >  ./rna/rna_seqs_oneline/$i
+		done
+		cd fragmentation
+			echo "Custom Rna fragmentation"
+			if [ ! -s rna_seqs_fragmented ]; then
+				mkdir rna_seqs_fragmented
+			fi
+			for i in `ls ../rna/rna_seqs_oneline/`
+				do
+					bash rna.job.cutter.sh ../rna/rna_seqs_oneline/$i > ../rna/rna_seqs_fragmented/$i.rna.fragm.seq;
+				done
+		cd ..
 
+		cd ./rna/rna_seqs_fragmented
+
+			if [ ! -s ../../rna.libraries.U/rna_seqs ]; then
+				mkdir ../../rna.libraries.U/rna_seqs
+			fi
+			n=0
+			for i in *
+			do
+  			if [ $((n+=1)) -gt 10 ]; then
+    			n=1
+  			fi
+  			todir=../../rna.libraries.U/rna_seqs/$n
+  			[ -d "$todir" ] || mkdir "$todir"
+  			mv "$i" "$todir"
+		done
+		cd ../../
+
+		echo "Custom rna library generation"
+		cd rna.libraries.U/
+			bash superjob.sh
+		cd ..
+		rna_lib_folder=$(pwd | awk '{print $0"/rna.libraries.U/outs/"}')
+
+	fi
+	if [[ $mode == "lincrnas" ]]
+	then
+		rna_lib_folder=$(echo $script_folder | awk '{print $0"/lincrnas/"}')
+	fi
 	# PROTEIN + RNA INTERACTIONS #################################################################################
 
 	echo "protein and RNA interaction computing"
@@ -68,7 +117,7 @@ then
 					mkdir pre-compiled/
 				fi
 
-				rna_lib_folder=$(echo $script_folder | awk '{print $0"/lincrnas/"}')
+				#all out.merged are saved to pre-compiled but then is distributed to folders in order to be paralelised
 				python multiplier.py 10 "prot" $rna_lib_folder
 				#echo "# protein / rna / raw score / dp " > ../../outputs/interactions.$1.$3.txt
 				#cat pre-compiled/* >> ../../outputs/interactions.$1.$3.txt
@@ -107,7 +156,7 @@ then
 					done ) &
 				done
 				wait
-				cat dir.*/filter.processed.txt >>../outputs/filter.processed.txt
+				cat dir.*/filter.processed.txt > ../outputs/filter.processed.txt
 				rm -fr dir.*
 			cd ..
 

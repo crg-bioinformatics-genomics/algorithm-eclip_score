@@ -1,0 +1,16 @@
+None
+0
+./tmp/omixtest/outputs/
+copied fastas
+copied all files
+copied all files
+copied all files
+copied all files
+copied all files
+copied all files
+copied all files
+copied all files
+copied all files
+copied all files
+copied all files
+copied all files

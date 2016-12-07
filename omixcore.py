@@ -6,7 +6,7 @@ import subprocess
 import shutil, errno
 import sys
 import json
-
+import IPython
 # we want to be agnostic to where the script is ran
 SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
 WORKER_PATH = os.path.realpath(os.curdir)
@@ -37,11 +37,15 @@ parser.add_argument(
    '-output_dir', type=str, nargs=1,
    help='Directory where the output is going to be stored')
 
+
 # accept form fields
 for item in task_definition['form_fields']:
-   nargs = 1 if item['required'] else "?"
-   parser.add_argument(
-	   '-FORM%s'%item['name'], type=str, default=["none"], nargs=nargs,
+	nargs = 1 if item['required'] else "?"
+	'''if item['name']=="rna_seq":
+		nargs='*'
+	'''
+   	parser.add_argument(
+	   '-FORM%s'%item['name'], type=str, default="none", nargs=nargs,
 	   help='Form argument: %s' % item)
 
 # this parse_args stops if any unexpected arguments is passed
@@ -49,9 +53,6 @@ args = parser.parse_args()
 
 OUTPUT_PATH = os.path.join(WORKER_PATH, args.output_dir[0])
 
-# import code; code.interact(local=locals())
-# import IPython
-# IPython.embed()
 
 import re
 import StringIO
@@ -64,6 +65,24 @@ protSeq = []
 for record in SeqIO.parse(StringIO.StringIO(args.FORMprotein_seq[0]), "fasta"):
 	protSeq.append(record)
 	break
+
+args.FORMrna_seq=[args.FORMrna_seq]
+Rpat = re.compile('>.*?\n[GATCU]+', re.IGNORECASE)
+if Rpat.match(args.FORMrna_seq[0]) == None:
+
+	args.FORMrna_seq[0] = ">input_rna\n"+args.FORMrna_seq[0]
+rnaSeq = []
+for record in SeqIO.parse(StringIO.StringIO(args.FORMrna_seq[0]), "fasta"):
+	rnaSeq.append(record)
+
+rnafolder=os.path.join(OUTPUT_PATH.replace("output/", ""),"rnas")
+if not os.path.exists(rnafolder):
+    os.makedirs(rnafolder)
+for entry in rnaSeq:
+	rnaFile = os.path.join(rnafolder,entry.id)
+	output_handle = open(rnaFile, "w")
+	SeqIO.write(entry, output_handle, "fasta")
+	output_handle.close()
 
 protFile = os.path.join(OUTPUT_PATH.replace("output/", ""),"protein.fasta")
 output_handle = open(protFile, "w")
@@ -91,7 +110,9 @@ else:
 	title = args.FORMtitle.replace(" ", "_")
 
 logfile = open("pylog."+str(random_number)+".txt","w")
-cmd = """bash omixcore.sh "{}" "{}" "{}" "{}" "{}"  """.format(random_number, args.FORMemail[0], title, "150", protFile)
+
+
+cmd = """bash omixcore.sh "{}" "{}" "{}" "{}" "{}" "{}" "{}"  """.format(random_number, args.FORMemail[0], title, "150", protFile, args.FORMmode[0],rnafolder)
 
 p = subprocess.Popen(cmd, cwd=SCRIPT_PATH, shell=True)
 
