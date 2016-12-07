@@ -56,7 +56,6 @@ form_fields:
         description: RNA sequence (FASTA format - min 50 nt)
         required: No
         type: textarea
-        min_length: 50
         hidden: Yes
     -   name: email
         description: Email address (optional, used for notification)
