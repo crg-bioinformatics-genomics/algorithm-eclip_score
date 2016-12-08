@@ -88,6 +88,7 @@ for record in SeqIO.parse(StringIO.StringIO(args.FORMprotein_seq[0]), "fasta"):
 	protSeq.append(record)
 	break
 
+
 args.FORMrna_seq=[args.FORMrna_seq]
 Rpat = re.compile('>.*?\n[GATCU]+', re.IGNORECASE)
 if Rpat.match(args.FORMrna_seq[0]) == None:
@@ -102,12 +103,15 @@ if not os.path.exists(rnafolder):
     os.makedirs(rnafolder)
 
 valid_entries=0
+rnaAllFile=os.path.join(OUTPUT_PATH,"rna.fasta")
+output_all_handle = open(rnaAllFile, "w")
 for entry in rnaSeq:
 	if len(entry.seq)>0:
 		valid_entries+=1
 		rnaFile = os.path.join(rnafolder,entry.id)
 		output_handle = open(rnaFile, "w")
 		SeqIO.write(entry, output_handle, "fasta")
+		SeqIO.write(entry, output_all_handle, "fasta")
 		output_handle.close()
 
 protFile = os.path.join(OUTPUT_PATH.replace("output/", ""),"protein.fasta")
@@ -137,6 +141,9 @@ else:
 
 logfile = open("pylog."+str(random_number)+".txt","w")
 
+modeFile=open(os.path.join(OUTPUT_PATH,"mode"),'w')
+modeFile.writelines(args.FORMmode[0])
+modeFile.close()
 if args.FORMmode[0]=="custom" and valid_entries==0:
 	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number)
 	logfile.write("created error index.html\n")

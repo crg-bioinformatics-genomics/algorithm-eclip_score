@@ -28,8 +28,7 @@ then
 		exit 1
 	fi
 
-	echo "# Reference Sequences" >  ./outputs/yoursequences.$1.$3.txt
-	cat ./protein/outfile  	    >>  ./outputs/yoursequences.$1.$3.txt
+
 
 
 	num2=`cat ./protein/outfile  | awk '{print NR}'`
@@ -102,6 +101,7 @@ then
 			bash superjob.sh
 		cd ..
 		rna_lib_folder=$(pwd | awk '{print $0"/rna.libraries.U/outs/"}')
+		python library_checker.py $rna_lib_folder
 
 	fi
 	if [[ $mode == "lincrnas" ]]

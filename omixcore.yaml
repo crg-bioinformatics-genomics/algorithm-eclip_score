@@ -38,7 +38,7 @@ form_fields:
         min_length: 50
         max_length: 10000
     -   name: mode
-        description: Run against all lincRNAs or against a custom RNA sequence
+        description: Run against lincRNAs database or custom RNA sequences
         type: radio
         hidden: No
         required: Yes
@@ -56,7 +56,7 @@ form_fields:
         description: RNA sequence (FASTA format - min 50 nt)
         required: No
         type: textarea
-        hidden: Yes
+        hidden: No
     -   name: email
         description: Email address (optional, used for notification)
         type: email

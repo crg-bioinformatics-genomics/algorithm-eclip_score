@@ -113,7 +113,19 @@
 						full_url = $(location).attr('href')
 						url_directory = full_url.split('/').slice(0, -1).join('/')
 						window.onload = function() {
+								fetch_url = url_directory+"/mode"
+								jQuery.ajax({
+										 url: fetch_url,
+										 dataType: 'text',
+										 success: function(result) {
+																	mode = result
 
+															},
+										 error: function() {
+												 alert("error loading ,ode function")
+										 },
+										 async:   false
+								});
 								//Get a reference to the link on the page
 								// with an id of "mylink"
 								var a = document.getElementById("mylink");
@@ -133,6 +145,7 @@
 									checkedValue=checkedValue.substring(0, checkedValue.length - 1);
 									if(checkedValue.length>1){
 										a.href=a.href.concat('/',checkedValue)
+										a.href=a.href.concat('/',mode)
 										return true
 									}
 									else{
@@ -195,14 +208,15 @@
 											cur_li += "</tr>"
 											$("#rna_ids").append(cur_li)
 									}
+									/*
 									$('input[type=checkbox]').on('change', function (e) {
-											if ($('input[type=checkbox]:checked').length > 5) {
+											if ($('input[type=checkbox]:checked').length > 50) {
 												$(this).prop('checked', false);
-												alert("allowed only 5");
+												alert("maximum selected: 50");
 											}
 
 									});
-
+									*/
 
 									//$("#myTable").tablesorter();
 								}
