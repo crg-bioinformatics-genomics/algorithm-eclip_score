@@ -153,8 +153,12 @@ then
 						cd dir.$j
 						prot_rna=$(echo $i | awk -F '.' '{print $3}')
 						rna=$(echo $prot_rna | awk -F '-' '{print $2}')
+
 						awk '{print "protein_"$1,"rna_"$2,$3,$4}' ../../interactions.U/combine_parallel/pre-compiled/$j/$i > interactions.$prot_rna.txt
-						bash start.sh interactions.$prot_rna.txt > $prot_rna.processed.txt
+						bash gs_network.sh interactions.$prot_rna.txt $rna
+
+						paste tmp/names.txt tmp/output.txt | awk '{print $1, $NF}'> $prot_rna.processed.txt
+						#bash start.sh interactions.$prot_rna.txt > $prot_rna.processed.txt
 						echo $rna $(awk '{printf "%.2f\n", ($2+1)/2}' $prot_rna.processed.txt) >> filter.processed.txt
 						cd ..
 					done ) &
