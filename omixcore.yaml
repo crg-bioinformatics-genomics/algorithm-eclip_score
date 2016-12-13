@@ -7,7 +7,7 @@ version:    1.0
 description:    >
     <p>OmiXcore Description</p>
 description_short:    >
-    OmiXcore short description
+
 nav_links:
     -   title:  >
             OmiXcore home
@@ -56,7 +56,7 @@ form_fields:
         description: RNA sequences (FASTA format - min 50 nt)
         required: No
         type: textarea
-        hidden: No
+        hidden: Yes
     -   name: email
         description: Email address (optional, used for notification)
         type: email
