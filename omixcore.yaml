@@ -53,7 +53,7 @@ form_fields:
                 shows:
                   - rna_seq
     -   name: rna_seq
-        description: RNA sequence (FASTA format - min 50 nt)
+        description: RNA sequences (FASTA format - min 50 nt)
         required: No
         type: textarea
         hidden: No
