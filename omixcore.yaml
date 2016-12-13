@@ -5,7 +5,7 @@ title_styled:   >
     OmiXcore
 version:    1.0
 description:    >
-    <p>OmiXcore Description</p>
+    <p><i>OmiXcore</i>, the first method for prediction of lncRNA-protein interactions trained on up-to-date eCLIP data. <i>OmiXcore</i> allows the quantitative prediction of binding site location onto >15.000 lncRNA sequences, facilitating experimental design and analysis.</p>
 description_short:    >
 
 nav_links:
