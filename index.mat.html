@@ -139,7 +139,7 @@
 									var inputElements = document.getElementsByClassName('rnaCheckbox');
 									for(var i=0; inputElements[i]; ++i){
 												if(inputElements[i].checked){
-													checkedValue=checkedValue.concat(inputElements[i].value,'?')
+													checkedValue=checkedValue.concat(inputElements[i].value,'+')
 												}
 									}
 									checkedValue=checkedValue.substring(0, checkedValue.length - 1);
