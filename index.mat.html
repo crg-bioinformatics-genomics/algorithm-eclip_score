@@ -133,13 +133,13 @@
 								//Set code to run when the link is clicked
 								// by assigning a function to "onclick"
 								a.onclick = function() {
-									//a.href="http://localhost:8081/new_submission/signal-localization/92909"
+									//a.href="http://localhost:8081/new_submission/signal-localization/{{randoms}}"
 									a.href="http://service.tartaglialab.com/new_submission/signal-localization/{{randoms}}"
 									var checkedValue = '';
 									var inputElements = document.getElementsByClassName('rnaCheckbox');
 									for(var i=0; inputElements[i]; ++i){
 												if(inputElements[i].checked){
-													checkedValue=checkedValue.concat(inputElements[i].value,'_')
+													checkedValue=checkedValue.concat(inputElements[i].value,'%')
 												}
 									}
 									checkedValue=checkedValue.substring(0, checkedValue.length - 1);
