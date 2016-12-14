@@ -23,6 +23,7 @@ from sklearn import ensemble
 from sklearn.externals import joblib
 
 
+
 def cleverMachine_petr(test_sequence,property_table,AAs):
 	"""
 	profile calculations from Petr
@@ -260,22 +261,28 @@ infile=open("./data/PfamIDsRnaBinding.txt","r")
 cpfam={}
 for line in infile:#PFAMID=1
 	cpfam[line.split()[0].split(".")[0]]=1
-
+infile.close()
 
 print "load pfamModels-nonclassical mapping"
 infile=open("./data/listOfNonClassicalBaltzCastelloKwon.Pfam","r")
 ncpfam={}
 for line in infile:#PFAMID = 1
 	ncpfam[line.split()[0]]=1
-
+infile.close()
 
 print "load pfamModels-putative mapping"
 infile=open("./data/listOfunknownPutativeBaltzCastelloKwon.Pfam","r")
 putpfam={}
 for line in infile:#PFAMID = 1
 	putpfam[line.split()[0]]=1
+infile.close()
 
-
+print "load eclip curated pfam domains"
+infile=open("./data/eclip.pfam.domains","r")
+eclippfam={}
+for line in infile:#PFAMID = 1
+	eclippfam[line.split()[2].split(".")[0]]=1
+infile.close()
 
 print "load motifs scan"
 motifsshort={}
@@ -332,9 +339,10 @@ for RBP in posRBP:
 	print small
 	o=open("./outputs/HMMER.results","w")
 	final={}
+
 	if small!=[]:
 		for a in small:
-			if (a.split()[0] in cpfam) or(a.split()[0] in ncpfam):#or(a.split()[0] in putpfam):
+			if (a.split()[0] in cpfam) or(a.split()[0] in ncpfam) or(a.split()[0] in eclippfam):#or(a.split()[0] in putpfam):
 				o.write(a.split()[0]+" "+a.split()[1]+" "+a.split()[2]+" "+small[a].split()[2]+"\n")
 				HMMERpresent=1
 				final[a]=small[a]
