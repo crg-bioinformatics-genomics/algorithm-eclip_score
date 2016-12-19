@@ -151,7 +151,7 @@ then
 					for i in `ls ../interactions.U/combine_parallel/pre-compiled/$j`
 					do
 						cd dir.$j
-						prot_rna=$(echo $i | awk -F '.' '{print $3}')
+						prot_rna=$(echo $i | awk -F 'out.merged.' '{print $2}' |  awk -F '.txt' '{print $1}')
 						rna=$(echo $prot_rna | awk -F '-' '{print $2}')
 
 						awk '{print "protein_"$1,"rna_"$2,$3,$4}' ../../interactions.U/combine_parallel/pre-compiled/$j/$i > interactions.$prot_rna.txt

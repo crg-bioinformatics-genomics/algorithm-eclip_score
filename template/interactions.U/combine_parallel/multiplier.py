@@ -93,7 +93,9 @@ def f(rna_file,prot_file):
     rna_fragments_summed=np.array(rna_fragments_summed)
 
 #    IPython.embed()
-    with open(os.path.join(current,'pre-compiled/out.merged.'+ntpath.basename(prot_file).split('.')[0]+'-'+ntpath.basename(rna_file).split('.')[0]+'.txt'), "w") as writef:
+    protname=ntpath.basename(prot_file).split('.rna.fragm.seq')[0]
+    rnaname=ntpath.basename(rna_file).split('.rna.fragm.seq')[0]
+    with open(os.path.join(current,'pre-compiled/out.merged.'+protname+'-'+rnaname+'.txt'), "w") as writef:
         for pf_index in range(0,len(prot_fragments_summed)):
             table=[]
             for i in range(0,len(prot_fragments_summed[pf_index])):

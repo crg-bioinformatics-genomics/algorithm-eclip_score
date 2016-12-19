@@ -108,6 +108,7 @@ output_all_handle = open(rnaAllFile, "w")
 for entry in rnaSeq:
 	if len(entry.seq)>0:
 		valid_entries+=1
+		entry.id=re.sub('[^0-9a-zA-Z]+', '_', entry.id)
 		rnaFile = os.path.join(rnafolder,entry.id)
 		output_handle = open(rnaFile, "w")
 		SeqIO.write(entry, output_handle, "fasta")
