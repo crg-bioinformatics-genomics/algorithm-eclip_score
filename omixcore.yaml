@@ -75,7 +75,7 @@ examples:
 
 algorithm:
     command:              "omixcore.py -output_dir=<output_dir>"
-    processing_timeout:
+    processing_timeout: 7200
 
 # for the processing part
 output:
