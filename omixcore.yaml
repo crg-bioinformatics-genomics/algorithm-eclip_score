@@ -68,12 +68,12 @@ examples:
     #-   reference_id:   55985
     #    title:          <br>CELF1
     #    description:    a canonical RNA-binding protein ( from <a href="http://www.sciencedirect.com/science/article/pii/S0300908405002634" target="_blank">Biochimie 2006</a>)
-    -   reference_id: 96557
-        title: P78344 NEAT1
+    -   reference_id: 96591
+        title: MALAT1 and P10155
         description: a positive protein-RNA pair, validated by eCLIP assay.
-    -   reference_id: 96538
-        title: P78344 NR_036527
-        description: a negative protein-RNA pair, validated by eCLIP assay.
+    #-   reference_id: 96538
+    #    title: P78344 NR_036527
+    #    description: a negative protein-RNA pair, validated by eCLIP assay.
 
 algorithm:
     command:              "omixcore.py -output_dir=<output_dir>"
