@@ -49,7 +49,7 @@ then
 		cd protein_library_generator/
 			sed 's/|/_/g' ../../protein/outfile.fr > outfile.fr.txt
 			bash rungenerator.protein.sh outfile.fr.txt
-			mv outfile.fr.prot.lib ../../outputs/protein.library.$1.$3.txt
+			mv outfile.fr.prot.lib ../../outputs/protein.lib
 			rm outfile.fr.txt
 		cd ../
 	cd ../
@@ -102,6 +102,8 @@ then
 		cd ..
 		rna_lib_folder=$(pwd | awk '{print $0"/rna.libraries.U/outs/"}')
 		python library_checker.py $rna_lib_folder
+		cp -r $rna_lib_folder outputs
+		mv outputs/outs/ outputs/rna_libs
 
 	fi
 	if [[ $mode == "lincrnas" ]]
@@ -114,7 +116,7 @@ then
 	date +"%m-%d-%y %r"
 
 	cd interactions.U/
-		cp ../outputs/protein.library.$1.$3.txt combine_parallel/prot/prot.lib
+		cp ../outputs/protein.lib combine_parallel/prot/prot.lib
 
 			cd combine_parallel/
 				if [ ! -s pre-compiled ]; then
@@ -167,7 +169,9 @@ then
 				cat dir.*/filter.processed.txt > ../outputs/filter.processed.txt
 				rm -fr dir.*
 			cd ..
-
+			rm -fr interactions.U/combine_parallel/pre-compiled/*
+			rm -fr images
+			rm -fr data
 
 
 
