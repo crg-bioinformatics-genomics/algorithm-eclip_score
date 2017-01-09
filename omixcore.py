@@ -176,7 +176,7 @@ if p.returncode == 0:
 		if os.path.isfile(TMP_PATH+file): #ignore directories
 			shutil.copyfile(TMP_PATH+file, OUTPUT_PATH+file)
 			logfile.write("copied all files\n")
-	IPython.embed()
+	
 	if os.path.exists(TMP_PATH+"rna_libs") == True :
 		copyfolder(TMP_PATH+"rna_libs", OUTPUT_PATH+"rna_libs")
 		logfile.write("copied rna_libs folder\n")
