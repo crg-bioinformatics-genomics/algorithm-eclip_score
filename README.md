@@ -1,2 +1,2 @@
-algorithm-eclip_score
+algorithm-omiXcore
 ============================
