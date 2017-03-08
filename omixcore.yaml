@@ -42,21 +42,21 @@ form_fields:
         type: radio
         hidden: No
         required: Yes
+        default: custom
         entries:
-            -   title:  lincRNAs
-                value:  lincrnas
-                hides:
-                  - rna_seq
-
             -   title:  Custom
                 value:  custom
                 shows:
+                  - rna_seq
+            -   title:  lincRNAs
+                value:  lincrnas
+                hides:
                   - rna_seq
     -   name: rna_seq
         description: RNA sequences (FASTA format - min 50 nt, max 30000 nt)
         required: No
         type: textarea
-        hidden: Yes
+        hidden: No
         min_length: 50
         max_length: 30000
     -   name: email
@@ -72,7 +72,7 @@ examples:
         title: P16989 and NM_006312 (NCOR2)
         description: a positive protein-RNA pair, validated by eCLIP assay.
     #-   reference_id: 96538
-    #    title: P78344 NR_036527 
+    #    title: P78344 NR_036527
     #    description: a negative protein-RNA pair, validated by eCLIP assay.
 
 algorithm:
