@@ -5,7 +5,8 @@ title_styled:   >
     OmiXcore
 version:    1.0
 description:    >
-    <p><i>OmiXcore</i>, the first method for prediction of lncRNA-protein interactions trained on up-to-date eCLIP data. <i>OmiXcore</i> allows the quantitative prediction of binding site location onto >15.000 lncRNA sequences, facilitating experimental design and analysis.</p>
+    <p><i>OmiXcore</i> predicts protein interactions with large RNA and is trained on eCLIP data, with proteins of length 150-2500 aa and RNAs of length  500-20000 nt.
+    <i>OmiXcore</i> allows the quantitative prediction of binding site location on >15.000 long intergenic non-coding RNAs (lincRNAs), facilitating experimental design and analysis.</p>
 description_short:    >
 
 nav_links:
@@ -32,7 +33,8 @@ form_fields:
         required: No
         type: text
     -   name: protein_seq
-        description: Protein sequence (FASTA format)
+        description: Protein sequence (FASTA format) - length in the range 150-2500 aa)
+        # based on statistics on training and testing sets.
         required: Yes
         type: textarea
         min_length: 50
@@ -48,12 +50,13 @@ form_fields:
                 value:  custom
                 shows:
                   - rna_seq
-            -   title:  lincRNAs
+            -   title:  lincRNA library
                 value:  lincrnas
                 hides:
                   - rna_seq
     -   name: rna_seq
-        description: RNA sequences (FASTA format - min 50 nt, max 30000 nt)
+        description: RNA sequences (FASTA format) - length in the range 500-20000 nt)
+        # based on statistics on training and testing sets.
         required: No
         type: textarea
         hidden: No
