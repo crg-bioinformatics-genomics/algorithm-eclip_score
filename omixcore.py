@@ -149,7 +149,7 @@ logfile = open("pylog."+str(random_number)+".txt","w")
 modeFile=open(os.path.join(OUTPUT_PATH,"mode"),'w')
 modeFile.writelines(args.FORMmode[0])
 modeFile.close()
-IPython.embed()
+
 if args.FORMmode[0]=="custom" and valid_entries==0:
 	error_message="Custom option selected, with 0 valid entries. Please check the lengths of the custom transcript sequences to be at least 100nt and re-submit!"
 	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number,error_message)
