@@ -260,8 +260,9 @@ if p.returncode == 0:
 else:
 	error_message="Webserver failed to run prediction. Please try again!"
 	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number, error_message)
-	sys.exit("The execution of the bash script failed.")
+
 	logfile.write("bash script failed\n")
+	sys.exit("The execution of the bash script failed.")
 
 
 logfile.write("that's it!\n")
