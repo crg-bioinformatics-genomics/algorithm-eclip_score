@@ -37,7 +37,7 @@ form_fields:
         # based on statistics on training and testing sets.
         required: Yes
         type: textarea
-        min_length: 50
+        min_length: 51
         max_length: 5000
     -   name: mode
         description: Run against lincRNAs database or custom RNA sequences

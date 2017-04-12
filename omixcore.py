@@ -156,7 +156,7 @@ if args.FORMmode[0]=="custom" and valid_entries==0:
 	logfile.write("custom option and valid entries. Created error index.html\n")
 	sys.exit("Wrong Submission. Custom option selected, with 0 valid entries. The execution of the bash script failed.")
 
-if len(protein_record.seq)<50:
+if len(protein_record.seq)<=50:
 
 	error_message="Protein sequence too short! Please check the length to be above 50aa and re-submit!"
 	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number,error_message)
