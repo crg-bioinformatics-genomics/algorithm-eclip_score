@@ -25,7 +25,7 @@ def copyfolder(src, dst):
 			shutil.copy(src, dst)
 		else: raise
 
-def error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number):
+def error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number,error_message):
 	settings.configure(TEMPLATE_DIRS=(os.path.join(SCRIPT_PATH,'./')), DEBUG=True, TEMPLATE_DEBUG=True)
 	with open(os.path.join(SCRIPT_PATH, "index.error.html"), "r") as template_file:
 		   template_string = "".join(template_file.readlines())
@@ -36,7 +36,9 @@ def error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number):
 	c = Context(
 	{"title": title,
 	 "randoms" : random_number,
-	 "generated" : str(datetime.datetime.now()), })
+	 "generated" : str(datetime.datetime.now()),
+	 "error_message" : error_message,
+	 })
 
 	with open(os.path.join(OUTPUT_PATH, "index.html"), "w") as output:
 		output.write(t.render(c))
@@ -106,7 +108,7 @@ valid_entries=0
 rnaAllFile=os.path.join(OUTPUT_PATH,"rna.fasta")
 output_all_handle = open(rnaAllFile, "w")
 for entry in rnaSeq:
-	if len(entry.seq)>0:
+	if len(entry.seq)>100:
 		valid_entries+=1
 		entry.id=re.sub('[^0-9a-zA-Z]+', '_', entry.id)
 		entry.description=""
@@ -118,9 +120,10 @@ for entry in rnaSeq:
 
 protFile = os.path.join(OUTPUT_PATH.replace("output/", ""),"protein.fasta")
 output_handle = open(protFile, "w")
-for record in SeqIO.parse(StringIO.StringIO(args.FORMprotein_seq[0]), "fasta"):
-	output_handle.write(str(">input_protein\n"+record.seq))
+for protein_record in SeqIO.parse(StringIO.StringIO(args.FORMprotein_seq[0]), "fasta"):
+	output_handle.write(str(">input_protein\n"+protein_record.seq))
 	break
+
 # SeqIO.write(protSeq, output_handle, "fasta")
 output_handle.close()
 
@@ -146,12 +149,19 @@ logfile = open("pylog."+str(random_number)+".txt","w")
 modeFile=open(os.path.join(OUTPUT_PATH,"mode"),'w')
 modeFile.writelines(args.FORMmode[0])
 modeFile.close()
+IPython.embed()
 if args.FORMmode[0]=="custom" and valid_entries==0:
-	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number)
-	logfile.write("created error index.html\n")
-	sys.exit("Wrong Submission. The execution of the bash script failed.")
+	error_message="Custom option selected, with 0 valid entries. Please check the lengths of the custom transcript sequences to be at least 100nt and re-submit!"
+	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number,error_message)
+	logfile.write("custom option and valid entries. Created error index.html\n")
+	sys.exit("Wrong Submission. Custom option selected, with 0 valid entries. The execution of the bash script failed.")
 
+if len(protein_record.seq)<50:
 
+	error_message="Protein sequence too short! Please check the length to be above 50aa and re-submit!"
+	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number,error_message)
+	logfile.write("Protein sequence too short. Created error index.html\n")
+	sys.exit("Wrong Submission. Protein sequence too short! The execution of the bash script failed.")
 
 
 cmd = """bash omixcore.sh "{}" "{}" "{}" "{}" "{}" "{}" "{}"  """.format(random_number, args.FORMemail[0], title, "150", protFile, args.FORMmode[0],rnafolder)
@@ -176,7 +186,7 @@ if p.returncode == 0:
 		if os.path.isfile(TMP_PATH+file): #ignore directories
 			shutil.copyfile(TMP_PATH+file, OUTPUT_PATH+file)
 			logfile.write("copied all files\n")
-	
+
 	if os.path.exists(TMP_PATH+"rna_libs") == True :
 		copyfolder(TMP_PATH+"rna_libs", OUTPUT_PATH+"rna_libs")
 		logfile.write("copied rna_libs folder\n")
@@ -248,7 +258,8 @@ if p.returncode == 0:
 		logfile.write("created index.html\n")
 
 else:
-	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number)
+	error_message="Webserver failed to run prediction. Please try again!"
+	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number, error_message)
 	sys.exit("The execution of the bash script failed.")
 	logfile.write("bash script failed\n")
 

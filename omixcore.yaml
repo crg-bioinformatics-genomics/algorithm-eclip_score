@@ -33,7 +33,7 @@ form_fields:
         required: No
         type: text
     -   name: protein_seq
-        description: Protein sequence (FASTA format) - length in the range 150-2500 aa)
+        description: Protein sequence (FASTA format - length in the range 150-2500 aa)
         # based on statistics on training and testing sets.
         required: Yes
         type: textarea
@@ -55,7 +55,7 @@ form_fields:
                 hides:
                   - rna_seq
     -   name: rna_seq
-        description: RNA sequences (FASTA format) - length in the range 500-20000 nt)
+        description: RNA sequences (FASTA format - length in the range 500-20000 nt)
         # based on statistics on training and testing sets.
         required: No
         type: textarea
