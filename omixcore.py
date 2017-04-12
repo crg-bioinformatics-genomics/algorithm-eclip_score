@@ -20,7 +20,7 @@ WORKER_PATH = os.path.realpath(os.curdir)
 def copyfolder(src, dst):
 	try:
 		if os.path.exists(dst):
-        	shutil.rmtree(dst)
+			shutil.rmtree(dst)
 		shutil.copytree(src, dst)
 	except OSError as exc: # python >2.5
 		if exc.errno == errno.ENOTDIR:
