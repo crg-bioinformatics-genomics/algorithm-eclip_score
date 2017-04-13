@@ -110,7 +110,7 @@ valid_entries=0
 rnaAllFile=os.path.join(OUTPUT_PATH,"rna.fasta")
 output_all_handle = open(rnaAllFile, "w")
 for entry in rnaSeq:
-	if len(entry.seq)>100:
+	if len(entry.seq)>=500:
 		valid_entries+=1
 		entry.id=re.sub('[^0-9a-zA-Z]+', '_', entry.id)
 		entry.description=""
@@ -153,15 +153,15 @@ modeFile.writelines(args.FORMmode[0])
 modeFile.close()
 
 if args.FORMmode[0]=="custom" and valid_entries==0:
-	error_message="Custom option selected, with 0 valid entries. Please check the lengths of the custom transcript sequences to be at least 100nt and re-submit!"
+	error_message="Custom option selected, with 0 valid entries. Please check the lengths of the custom transcript sequences to be at least 500nt and re-submit!"
 	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number,error_message)
 	logfile.write("custom option and valid entries. Created error index.html\n")
 	sys.exit()
 	#sys.exit("Wrong Submission. Custom option selected, with 0 valid entries. The execution of the bash script failed.")
 
-if len(protein_record.seq)<=50:
+if len(protein_record.seq)<=150:
 
-	error_message="Protein sequence too short! Please check the length to be above 50aa and re-submit!"
+	error_message="Protein sequence too short! Please check the length of the protein sequence to be at least 150aa and re-submit!"
 	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number,error_message)
 	logfile.write("Protein sequence too short. Created error index.html\n")
 	sys.exit()
