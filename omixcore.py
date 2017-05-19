@@ -135,7 +135,6 @@ for protein_record in SeqIO.parse(StringIO.StringIO(args.FORMprotein_seq[0]), "f
 output_handle.close()
 
 
-IPython.embed()
 
 os.chdir(SCRIPT_PATH)
 # print(WORKER_PATH)
