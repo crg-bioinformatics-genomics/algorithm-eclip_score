@@ -95,16 +95,21 @@ for record in SeqIO.parse(StringIO.StringIO(args.FORMprotein_seq[0]), "fasta"):
 
 args.FORMrna_seq=[args.FORMrna_seq]
 Rpat = re.compile('>.*?\n[GATCU]+', re.IGNORECASE)
-if Rpat.match(args.FORMrna_seq[0]) == None:
-
-	args.FORMrna_seq[0] = ">input_rna\n"+args.FORMrna_seq[0]
 rnaSeq = []
-for record in SeqIO.parse(StringIO.StringIO(args.FORMrna_seq[0]), "fasta"):
-	rnaSeq.append(record)
+records=SeqIO.parse(StringIO.StringIO(args.FORMrna_seq[0]), "fasta")
+
+for record in records:
+	if record.id=="":
+		record.id="input_rna"
+	check=">"+record.id+"\n"+str(record.seq)
+	if Rpat.match(check) != None:
+		rnaSeq.append(record)
+
 
 rnafolder=os.path.join(OUTPUT_PATH.replace("output/", ""),"rnas")
 if not os.path.exists(rnafolder):
     os.makedirs(rnafolder)
+
 
 valid_entries=0
 rnaAllFile=os.path.join(OUTPUT_PATH,"rna.fasta")
@@ -130,7 +135,7 @@ for protein_record in SeqIO.parse(StringIO.StringIO(args.FORMprotein_seq[0]), "f
 output_handle.close()
 
 
-
+IPython.embed()
 
 os.chdir(SCRIPT_PATH)
 # print(WORKER_PATH)
