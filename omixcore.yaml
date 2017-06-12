@@ -8,7 +8,7 @@ description:    >
     <p><i>OmiXcore</i> predicts protein interactions with large RNA and is trained on eCLIP data, with proteins of length 150-2500 aa and RNAs of length  500-20000 nt.
     <i>OmiXcore</i> allows the quantitative prediction of binding site location on >15.000 long intergenic non-coding RNAs (lincRNAs), facilitating experimental design and analysis.</p>
 description_short:    >
-
+    The algorithm has been trained on datasets of 96 RBP studied by eCLIP assays <a href="https://www.ncbi.nlm.nih.gov/pubmed/27018577">(Van Nostrand et al. 2016)</a>.
 nav_links:
     -   title:  >
             OmiXcore home
