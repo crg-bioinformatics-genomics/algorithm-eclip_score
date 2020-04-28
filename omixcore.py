@@ -97,6 +97,7 @@ args.FORMrna_seq=[args.FORMrna_seq]
 Rpat = re.compile('>.*?\n[GATCU]+', re.IGNORECASE)
 rnaSeq = []
 records=SeqIO.parse(StringIO.StringIO(args.FORMrna_seq[0]), "fasta")
+SeqIO.write(records, os.path.join(OUTPUT_PATH,"Submission_rna.fasta") , "fasta")
 
 for record in records:
 	if record.id=="":
@@ -150,11 +151,18 @@ if type(args.FORMtitle)==list:
 else:
 	title = args.FORMtitle.replace(" ", "_")
 
-logfile = open("pylog."+str(random_number)+".txt","w")
+logfile = open(os.path.join(OUTPUT_PATH,"pylog."+str(random_number)+".txt"),"w")
 
 modeFile=open(os.path.join(OUTPUT_PATH,"mode"),'w')
 modeFile.writelines(args.FORMmode[0])
 modeFile.close()
+#IPython.embed()
+if len(rnaSeq) == 0:
+	print "Please make sure that the RNA sequence is in the correct FASTA format, containing only [GATCU] characters and resubmit."
+	error_message= "Please make sure that the RNA sequence is in the correct FASTA format, containing only [GATCU] characters and resubmit."
+	error_page(OUTPUT_PATH,SCRIPT_PATH,title,random_number,error_message)
+	logfile.write("Please make sure that the RNA sequence is in the correct FASTA format, containing only [GATCU] characters and resubmit.\n")
+	sys.exit()
 
 if args.FORMmode[0]=="custom" and valid_entries==0:
 	error_message="Custom option selected, with 0 valid entries. Please check the lengths of the custom transcript sequences to be at least 500nt and re-submit!"
@@ -275,4 +283,4 @@ else:
 
 logfile.write("that's it!\n")
 logfile.close()
-os.remove("pylog."+str(random_number)+".txt")
+#os.remove("pylog."+str(random_number)+".txt")
