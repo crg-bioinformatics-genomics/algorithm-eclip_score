@@ -96,15 +96,18 @@ for record in SeqIO.parse(StringIO.StringIO(args.FORMprotein_seq[0]), "fasta"):
 args.FORMrna_seq=[args.FORMrna_seq]
 Rpat = re.compile('>.*?\n[GATCU]+', re.IGNORECASE)
 rnaSeq = []
-records=SeqIO.parse(StringIO.StringIO(args.FORMrna_seq[0]), "fasta")
+records = SeqIO.parse(StringIO.StringIO(args.FORMrna_seq[0]), "fasta")
 SeqIO.write(records, os.path.join(OUTPUT_PATH,"Submission_rna.fasta") , "fasta")
 
-for record in records:
-	if record.id=="":
-		record.id="input_rna"
-	check=">"+record.id+"\n"+str(record.seq)
+
+for record2 in SeqIO.parse(StringIO.StringIO(args.FORMrna_seq[0]), "fasta"):
+
+
+	if record2.id == "":
+		record2.id="input_rna"
+	check=">"+record2.id+"\n"+str(record2.seq)
 	if Rpat.match(check) != None:
-		rnaSeq.append(record)
+		rnaSeq.append(record2)
 
 
 rnafolder=os.path.join(OUTPUT_PATH.replace("output/", ""),"rnas")
@@ -156,7 +159,7 @@ logfile = open(os.path.join(OUTPUT_PATH,"pylog."+str(random_number)+".txt"),"w")
 modeFile=open(os.path.join(OUTPUT_PATH,"mode"),'w')
 modeFile.writelines(args.FORMmode[0])
 modeFile.close()
-#IPython.embed()
+
 if len(rnaSeq) == 0:
 	print "Please make sure that the RNA sequence is in the correct FASTA format, containing only [GATCU] characters and resubmit."
 	error_message= "Please make sure that the RNA sequence is in the correct FASTA format, containing only [GATCU] characters and resubmit."
